@@ -435,8 +435,12 @@ class _PersonalState extends State<Personal> {
                                                               )
                                                           ),
                                                           validator: (value) {
-                                                            if (value!.isEmpty) {
-                                                              return 'Please enter your first name';
+                                                            if (value == null || value.isEmpty) {
+                                                              return 'Please enter your First Name';
+                                                            }
+                                                            final RegExp nameExp = RegExp(r'^[a-zA-Z ]+$');
+                                                            if (!nameExp.hasMatch(value)) {
+                                                              return 'Please enter a valid First Name';
                                                             }
                                                             return null;
                                                           },
@@ -477,8 +481,12 @@ class _PersonalState extends State<Personal> {
                                                                 )
                                                             ),
                                                             validator: (value) {
-                                                              if (value!.isEmpty) {
-                                                                return 'Please enter your last name';
+                                                              if (value == null || value.isEmpty) {
+                                                                return 'Please enter your Last Name';
+                                                              }
+                                                              final RegExp nameExp = RegExp(r'^[a-zA-Z ]+$');
+                                                              if (!nameExp.hasMatch(value)) {
+                                                                return 'Please enter a valid Last Name';
                                                               }
                                                               return null;
                                                             },
@@ -496,7 +504,7 @@ class _PersonalState extends State<Personal> {
                                                             decoration:  const InputDecoration(
 
                                                               //icon: Icon(Icons.person, color: secondaryColor,),
-                                                                hintText: 'Enter  date of birth',
+                                                                hintText: 'yyyy-mm-dd',
                                                                 labelText: 'DOB',
                                                                 labelStyle: TextStyle(color: secondaryColor),
                                                                 enabledBorder: OutlineInputBorder(
@@ -523,7 +531,7 @@ class _PersonalState extends State<Personal> {
                                                               }
                                                               final dateOfBirth = DateTime.tryParse(value);
                                                               if (dateOfBirth == null) {
-                                                                return 'Please enter a valid date of birth (dd-mm-yyyy)';
+                                                                return 'Please enter a valid date of birth (yyyy-mm-dd)';
                                                               }
                                                               final age = DateTime.now().difference(dateOfBirth).inDays ~/ 365;
                                                               if (age < 18) {
@@ -568,8 +576,11 @@ class _PersonalState extends State<Personal> {
                                                                   )
                                                               ),
                                                               validator: (value) {
-                                                                if (value!.isEmpty) {
-                                                                  return 'Please enter your gender';
+                                                                if (value == null || value.isEmpty) {
+                                                                  return 'Please enter your gender (Male/Female)';
+                                                                }
+                                                                if (value != 'Male' && value != 'male' && value != 'Female' && value != 'female') {
+                                                                  return 'Please enter a valid gender (Male/Female)';
                                                                 }
                                                                 return null;
                                                               },
@@ -614,6 +625,9 @@ class _PersonalState extends State<Personal> {
                                                               if (value!.isEmpty) {
                                                                 return 'Please enter your city';
                                                               }
+                                                              if (!RegExp("^[a-zA-Z ]+\$").hasMatch(value)) {
+                                                                return 'Please enter a valid city name';
+                                                              }
                                                               return null;
                                                             },
                                                           ),
@@ -655,6 +669,9 @@ class _PersonalState extends State<Personal> {
                                                               validator: (value) {
                                                                 if (value!.isEmpty) {
                                                                   return 'Please enter your state';
+                                                                }
+                                                                if (!RegExp("^[a-zA-Z ]+\$").hasMatch(value)) {
+                                                                  return 'Please enter a valid state name';
                                                                 }
                                                                 return null;
                                                               },
@@ -712,96 +729,7 @@ class _PersonalState extends State<Personal> {
                                                         ),
                                                       ],
                                                     ),
-                                                    // Row(
-                                                    //   children: [
-                                                    //     Container(
-                                                    //       margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.01, MediaQuery.of(context).size.height*0.09, 0, 0),
-                                                    //       height: MediaQuery.of(context).size.height*0.035,
-                                                    //       width: MediaQuery.of(context).size.width*0.05,
-                                                    //       decoration: BoxDecoration(
-                                                    //         color: mainColor,
-                                                    //         borderRadius: BorderRadius.circular(10),
-                                                    //       ),
-                                                    //       child: Center(
-                                                    //         child: InkWell(
-                                                    //           onTap: (){
-                                                    //
-                                                    //             setState(() {
-                                                    //
-                                                    //             });
-                                                    //           },
-                                                    //           child: MaterialButton(
-                                                    //             minWidth: MediaQuery.of(context).size.width,
-                                                    //             padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                                                    //             onPressed: () async {
-                                                    //               if (_formKey.currentState!.validate()) {
-                                                    //
-                                                    //                 var response = await FirebaseCrud.addUser(
-                                                    //                   email: emailController.text,
-                                                    //                   username: userName.text,
-                                                    //                   firstName: _firstName.text,
-                                                    //                   lastName: _lastName.text,
-                                                    //                   dob: _dob.text,
-                                                    //                   gender: _gender.text,
-                                                    //                   city: _city.text,
-                                                    //                   state: _state.text,
-                                                    //                 );
-                                                    //                 if (response.code != 200) {
-                                                    //                   showDialog(
-                                                    //                       context: context,
-                                                    //                       builder: (context) {
-                                                    //                         return AlertDialog(
-                                                    //                           content: Text(response.message.toString()),
-                                                    //                         );
-                                                    //                       });
-                                                    //                 } else {
-                                                    //                   showDialog(
-                                                    //                       context: context,
-                                                    //                       builder: (context) {
-                                                    //                         return AlertDialog(
-                                                    //                           content: Text(response.message.toString()),
-                                                    //                         );
-                                                    //                       });
-                                                    //                 }
-                                                    //               }
-                                                    //             },
-                                                    //             child: const Text(
-                                                    //               "Save",
-                                                    //               style: TextStyle(fontSize: 13, fontFamily: fontFam, color: Colors.white, fontWeight: FontWeight.w400),
-                                                    //             ),
-                                                    //           ),
-                                                    //
-                                                    //
-                                                    //         ),
-                                                    //       ),
-                                                    //     ),
-                                                    //     Container(
-                                                    //       margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.21, MediaQuery.of(context).size.height*0.09, 0, 0),
-                                                    //       height: MediaQuery.of(context).size.height*0.035,
-                                                    //       width: MediaQuery.of(context).size.width*0.04,
-                                                    //       decoration: BoxDecoration(
-                                                    //         color: const Color(0xFFF7F8FB),
-                                                    //         borderRadius: BorderRadius.circular(10),
-                                                    //         border:  Border.all(width: 1, color: mainColor),
-                                                    //       ),
-                                                    //       child: Center(
-                                                    //         child: InkWell(
-                                                    //           onTap: (){
-                                                    //             Navigator.push(context, MaterialPageRoute(builder: (context)=> details(emailController: emailController)));
-                                                    //             setState(() {
-                                                    //
-                                                    //             });
-                                                    //           },
-                                                    //           child: const Text(
-                                                    //             "Next",
-                                                    //             style: TextStyle(fontSize: 13, fontFamily: fontFam, color: mainColor, fontWeight: FontWeight.w400),
-                                                    //           ),
-                                                    //
-                                                    //         ),
-                                                    //       ),
-                                                    //     ),
-                                                    //   ],
-                                                    // ),
+
                                                   ],
                                                 ),
 

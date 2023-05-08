@@ -411,11 +411,16 @@ class _MyAppState extends State<Signup> {
                                                           )
                                                       ),
                                                       validator: (value) {
-                                                        if (value!.isEmpty) {
-                                                          return 'Please enter your user name';
+                                                        if (value == null || value.isEmpty) {
+                                                          return 'Please enter a username';
+                                                        }
+                                                        final RegExp usernameExp = RegExp(r'^[a-zA-Z0-9]+$');
+                                                        if (!usernameExp.hasMatch(value)) {
+                                                          return 'Please enter only alphanumeric characters';
                                                         }
                                                         return null;
                                                       },
+
                                                     ),
 
                                                     SizedBox(
@@ -451,7 +456,10 @@ class _MyAppState extends State<Signup> {
                                                           )
                                                       ),
                                                       validator: (value) {
-                                                        if (value != null && value.isNotEmpty) {
+                                                        if (value == null || value.isEmpty) {
+                                                          return 'Please enter an email address';
+                                                        }
+                                                        if (value.isNotEmpty) {
                                                           final RegExp regex =
                                                           RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)| (\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
                                                           if (!regex.hasMatch(value!)) {
