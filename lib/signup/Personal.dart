@@ -518,8 +518,16 @@ class _PersonalState extends State<Personal> {
                                                                 )
                                                             ),
                                                             validator: (value) {
-                                                              if (value!.isEmpty) {
+                                                              if (value == null) {
                                                                 return 'Please enter your date of birth';
+                                                              }
+                                                              final dateOfBirth = DateTime.tryParse(value);
+                                                              if (dateOfBirth == null) {
+                                                                return 'Please enter a valid date of birth (dd-mm-yyyy)';
+                                                              }
+                                                              final age = DateTime.now().difference(dateOfBirth).inDays ~/ 365;
+                                                              if (age < 18) {
+                                                                return 'You must be at least 18 years old to sign up';
                                                               }
                                                               return null;
                                                             },
@@ -662,32 +670,6 @@ class _PersonalState extends State<Personal> {
 
                                                     Row(
                                                       children: [
-                                                        Container(
-                                                          margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.18, MediaQuery.of(context).size.height*0.05, 0, 0),
-                                                          height: MediaQuery.of(context).size.height*0.035,
-                                                          width: MediaQuery.of(context).size.width*0.04,
-                                                          decoration: BoxDecoration(
-                                                            color: const Color(0xFFF7F8FB),
-                                                            borderRadius: BorderRadius.circular(10),
-                                                            border:  Border.all(width: 1, color: mainColor),
-                                                          ),
-                                                          child: Center(
-                                                            child: InkWell(
-                                                              onTap: (){
-                                                                //Navigator.push(context, MaterialPageRoute(builder: (context)=> Personal()));
-                                                                Navigator.pop(context);
-                                                                setState(() {
-
-                                                                });
-                                                              },
-                                                              child: const Text(
-                                                                "Back",
-                                                                style: TextStyle(fontSize: 13, fontFamily: fontFam, color: mainColor, fontWeight: FontWeight.w400),
-                                                              ),
-
-                                                            ),
-                                                          ),
-                                                        ),
                                                         Container(
                                                           margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.01, MediaQuery.of(context).size.height*0.05, 0, 0),
                                                           height: MediaQuery.of(context).size.height*0.035,

@@ -246,6 +246,10 @@ class _SignInState extends State<SignIn> {
                                                     if (value!.isEmpty) {
                                                       return 'Please enter your Email Address';
                                                     }
+                                                    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+                                                    if (!emailRegex.hasMatch(value)) {
+                                                      return 'Please enter a valid email address';
+                                                    }
                                                     return null;
                                                   },
                                                 ),
@@ -259,34 +263,50 @@ class _SignInState extends State<SignIn> {
 
                                                 TextFormField(
                                                   obscureText: true,
-                                                  controller:_passwordController,
-                                                  decoration:   InputDecoration(
-                                                      icon: Icon(Icons.email_outlined, color: secondaryColor,),
-                                                      hintText: 'Enter your Password',
-                                                      errorText: _passwordIsValid? null:"Enter password",
-                                                      labelText: 'Password',
-                                                      labelStyle: TextStyle(color: secondaryColor),
-                                                      enabledBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 1, color: secondaryColor),
-                                                        // borderRadius: BorderRadius.circular(15),
-                                                      ),
-
-                                                      focusedBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(width: 1, color: mainColor),
-                                                        //borderRadius: BorderRadius.circular(15),
-                                                      ),
-                                                      focusedErrorBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.red, width: 1),
-                                                        // borderRadius: BorderRadius.circular(0),
-                                                      ) ,
-                                                      errorBorder: OutlineInputBorder(
-                                                        borderSide: BorderSide(color: Colors.red, width: 1),
-                                                        //borderRadius: BorderRadius.circular(15),
-                                                      )
+                                                  controller: _passwordController,
+                                                  decoration: InputDecoration(
+                                                    icon: Icon(Icons.email_outlined, color: secondaryColor,),
+                                                    hintText: 'Enter your Password',
+                                                    labelText: 'Password',
+                                                    labelStyle: TextStyle(color: secondaryColor),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1, color: secondaryColor),
+                                                      // borderRadius: BorderRadius.circular(15),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(width: 1, color: mainColor),
+                                                      //borderRadius: BorderRadius.circular(15),
+                                                    ),
+                                                    focusedErrorBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Colors.red, width: 1),
+                                                      // borderRadius: BorderRadius.circular(0),
+                                                    ),
+                                                    errorBorder: OutlineInputBorder(
+                                                      borderSide: BorderSide(color: Colors.red, width: 1),
+                                                      //borderRadius: BorderRadius.circular(15),
+                                                    ),
                                                   ),
+                                                  validator: (value) {
+                                                    if (value == null || value.isEmpty) {
+                                                      return 'Please enter a password';
+                                                    }
+                                                    if (value.length < 8) {
+                                                      return 'Password must be at least 8 characters long';
+                                                    }
+                                                    if (!value.contains(new RegExp(r'[A-Z]'))) {
+                                                      return 'Password must contain at least one uppercase letter';
+                                                    }
+                                                    if (!value.contains(new RegExp(r'[a-z]'))) {
+                                                      return 'Password must contain at least one lowercase letter';
+                                                    }
+                                                    if (!value.contains(new RegExp(r'[0-9]'))) {
+                                                      return 'Password must contain at least one number';
+                                                    }
+                                                    return null;
+                                                  },
                                                   onChanged: _validatePassword,
-
                                                 ),
+
 
 
                                                 Row(

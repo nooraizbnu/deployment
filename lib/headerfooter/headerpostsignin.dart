@@ -313,6 +313,7 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:procollab_web/about/about.dart';
 import 'package:procollab_web/allposts/posts.dart';
 import 'package:procollab_web/earnings/Earnings.dart';
 import 'package:procollab_web/progress/editpage.dart';

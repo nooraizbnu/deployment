@@ -275,8 +275,17 @@ class _detailsState extends State<details> {
                                                             )
                                                         ),
                                                         validator: (value) {
-                                                          if (value!.isEmpty) {
-                                                            return 'Please enter your linkdin profile link';
+                                                          if (value == null) {
+                                                            return 'Please enter a LinkedIn profile link';
+                                                          }
+                                                          // Check if the input string matches a valid LinkedIn profile URL pattern
+                                                          RegExp regex = RegExp(
+                                                            r'^https:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-_]{5,30}\/?$',
+                                                            caseSensitive: false,
+                                                            multiLine: false,
+                                                          );
+                                                          if (!regex.hasMatch(value)) {
+                                                            return 'Please enter a valid LinkedIn profile link';
                                                           }
                                                           return null;
                                                         },

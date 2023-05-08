@@ -59,7 +59,7 @@ class TaskHome extends StatelessWidget {
                         }else{
                           exists = false;
                           print("not allowed");
-                          return Text("Not Allowed");
+                          return Center(child: Container(margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height*0.25, 0, 0), child: Text("                 No Projects Yet!\nPlease Contribute in a Project first!", style: TextStyle(fontSize: 20, fontFamily: "DM Sans", color: Colors.redAccent, fontWeight: FontWeight.w400))));
                         }
                         return Container();
 
