@@ -1,0 +1,5 @@
+const apiKey =
+    'pk_test_51MqeSACj3lhyxWDZzXmCd0d0m1CaM6co8nvoEjMZvkGx9Z6g5gSchmzNhJsKmhikk3JsF0ZYXOgKaISZytAw7FKJ00BalARYgn';
+const secretKey =
+    'sk_test_51MqeSACj3lhyxWDZSSYLvSGHFwnSvYDMtXPdjkAlBpMnUDXqKM6uFXJlJF7j0Li1JVgWz1DRwLx0zUYQYRJYC52q00My7L01vy';
+const nikesPriceId = 'price_1Mr7bhCj3lhyxWDZNZdkon8y';
