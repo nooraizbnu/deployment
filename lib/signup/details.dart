@@ -170,14 +170,45 @@ class _detailsState extends State<details> {
                                                           if (value!.isEmpty) {
                                                             return 'Please enter Field of work';
                                                           }
-                                                          final RegExp nameExp = RegExp(r'^[a-zA-Z]+$');
-                                                          if (!nameExp.hasMatch(value)) {
-                                                            return 'Please enter only text';
-                                                          }
                                                           return null;
                                                         },
                                                       ),
-
+                                                      // SizedBox(
+                                                      //   height: MediaQuery.of(context).size.height*0.01,
+                                                      // ),
+                                                      // TextFormField(
+                                                      //   //controller:_emailController ,
+                                                      //   decoration:  const InputDecoration(
+                                                      //
+                                                      //       icon: Icon(Icons.cast_for_education, color: secondaryColor,),
+                                                      //       hintText: 'Certificates/Diplomas/Degree(s):',
+                                                      //       labelText: 'Certificates/Diplomas/Degree(s):',
+                                                      //       labelStyle: TextStyle(color: secondaryColor),
+                                                      //       enabledBorder: OutlineInputBorder(
+                                                      //         borderSide: BorderSide(width: 1, color: secondaryColor),
+                                                      //         // borderRadius: BorderRadius.circular(15),
+                                                      //       ),
+                                                      //       focusedBorder: OutlineInputBorder(
+                                                      //
+                                                      //         borderSide: BorderSide(width: 1, color: mainColor),
+                                                      //         //borderRadius: BorderRadius.circular(15),
+                                                      //       ),
+                                                      //       focusedErrorBorder: OutlineInputBorder(
+                                                      //         borderSide: BorderSide(color: Colors.red, width: 1),
+                                                      //         // borderRadius: BorderRadius.circular(0),
+                                                      //       ) ,
+                                                      //       errorBorder: OutlineInputBorder(
+                                                      //         borderSide: BorderSide(color: Colors.red, width: 1),
+                                                      //         //borderRadius: BorderRadius.circular(15),
+                                                      //       )
+                                                      //   ),
+                                                      //   validator: (value) {
+                                                      //     if (value!.isEmpty) {
+                                                      //       return 'Please enter some text';
+                                                      //     }
+                                                      //     return null;
+                                                      //   },
+                                                      // ),
                                                       SizedBox(
                                                         height: MediaQuery.of(context).size.height*0.01,
                                                       ),
@@ -299,6 +330,9 @@ class _detailsState extends State<details> {
                                                                         fieldofwork: _fieldofwork.text,
                                                                         description: _description.text,
                                                                         linkedin: _linkedin.text,
+                                                                        name: "${firstName.text} ${lastName.text}",
+                                                                        area: _fieldofwork.text,
+                                                                        from: state.text,
                                                                       );
                                                                       if (response.code != 200) {
                                                                         showDialog(
@@ -368,6 +402,60 @@ class _detailsState extends State<details> {
                                                           ),
                                                         ],
                                                       ),
+                                                      // Row(
+                                                      //   children: [
+                                                      //     Container(
+                                                      //       margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.18, MediaQuery.of(context).size.height*0.05, 0, 0),
+                                                      //       height: MediaQuery.of(context).size.height*0.035,
+                                                      //       width: MediaQuery.of(context).size.width*0.04,
+                                                      //       decoration: BoxDecoration(
+                                                      //         color: const Color(0xFFF7F8FB),
+                                                      //         borderRadius: BorderRadius.circular(10),
+                                                      //         border:  Border.all(width: 1, color: mainColor),
+                                                      //       ),
+                                                      //       child: Center(
+                                                      //         child: InkWell(
+                                                      //           onTap: (){
+                                                      //             //Navigator.push(context, MaterialPageRoute(builder: (context)=> Personal()));
+                                                      //             //Navigator.pop(context);
+                                                      //             setState(() {
+                                                      //
+                                                      //             });
+                                                      //           },
+                                                      //           child: const Text(
+                                                      //             "Back",
+                                                      //             style: TextStyle(fontSize: 13, fontFamily: fontFam, color: mainColor, fontWeight: FontWeight.w400),
+                                                      //           ),
+                                                      //
+                                                      //         ),
+                                                      //       ),
+                                                      //     ),
+                                                      //     Container(
+                                                      //       margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.01, MediaQuery.of(context).size.height*0.05, 0, 0),
+                                                      //       height: MediaQuery.of(context).size.height*0.035,
+                                                      //       width: MediaQuery.of(context).size.width*0.05,
+                                                      //       decoration: BoxDecoration(
+                                                      //         color: mainColor,
+                                                      //         borderRadius: BorderRadius.circular(10),
+                                                      //       ),
+                                                      //       child: Center(
+                                                      //         child: InkWell(
+                                                      //           onTap: (){
+                                                      //             Navigator.push(context, MaterialPageRoute(builder: (context)=> const confirmation()));
+                                                      //             setState(() {
+                                                      //
+                                                      //             });
+                                                      //           },
+                                                      //           child: const Text(
+                                                      //             "Next",
+                                                      //             style: TextStyle(fontSize: 13, fontFamily: fontFam, color: Colors.white, fontWeight: FontWeight.w400),
+                                                      //           ),
+                                                      //
+                                                      //         ),
+                                                      //       ),
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
                                                     ],
                                                   ),
                                                 ),
@@ -698,8 +786,7 @@ class _detailsState extends State<details> {
 
               );
             }
-        )
-    );
-  }
+            )
+        );
+    }
 }
-

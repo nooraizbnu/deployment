@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:procollab_web/profile/allpayableposts.dart';
 
+import 'getpaybledata.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -45,31 +47,47 @@ class _PayableMainState extends State<PayableMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Builder(builder: (context){
-          return Scaffold(
-            body: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: [
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height*0.15,
+              ),
 
+              Container(
+                height: MediaQuery.of(context).size.height,
+                child: FutureBuilder(
+                  future: getDocIds(),
+                  builder: (context, snapshot){
+                    return ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: docIDs.length,
+                        itemBuilder: (context, index){
+                          return Container(
+                            child: Row(
+                              children: [
+                                Row(children: [
+                                  GetPayableData(documentId: docIDs[index]),
+                                ],),
+                              ],
+                            ),
 
-
-                    Allpayable(),//GET data Page
-
-
-
-
-                    // Footer
-                  ],
+                          );
+                        }
+                    );
+                  },
                 ),
               ),
-            ),
 
-          );
-        },
-        )
+              // ),
+            ],
+
+
+          ),
+        ),
+      ),
     );
   }
 }

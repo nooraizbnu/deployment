@@ -135,13 +135,14 @@ class SPDetail extends StatelessWidget {
                                       children: [
                                         Text("Responsibilities: \n", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.03, color: mainColor, fontWeight: FontWeight.w400,),),
                                         Container(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children:
-                                            List.generate(4, (index){
-                                              return Text("- ${data['responsibilities'][index]}", style: TextStyle(decoration: TextDecoration.none,fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
-                                            }),
-                                          ),
+                                          // child: Column(
+                                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                                          //   children:
+                                          //   List.generate(4, (index){
+                                          //     return Text("- ${data['responsibilities'][index]}", style: TextStyle(decoration: TextDecoration.none,fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
+                                          //   }),
+                                          // ),
+                                          child: Text("- ${data['responsibilities']}", style: TextStyle(decoration: TextDecoration.none,fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),),
                                         ),
                                       ]
                                   ),
@@ -156,13 +157,14 @@ class SPDetail extends StatelessWidget {
                                       children: [
                                         Text("\nRequirements: \n", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.03, color: mainColor, fontWeight: FontWeight.w400,),),
                                         Container(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children:
-                                            List.generate(5, (index){
-                                              return Text("- ${data['requirements'][index]}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
-                                            }),
-                                          ),
+                                          // child: Column(
+                                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                                          //   children:
+                                          //   List.generate(5, (index){
+                                          //     return Text("- ${data['requirements'][index]}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
+                                          //   }),
+                                          // ),
+                                          child: Text("- ${data['requirements']}", style: TextStyle(decoration: TextDecoration.none,fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),),
                                         ),
                                       ]
                                   ),
@@ -177,13 +179,14 @@ class SPDetail extends StatelessWidget {
                                       children: [
                                         Text("Experience: \n", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.03, color: mainColor, fontWeight: FontWeight.w400,),),
                                         Container(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children:
-                                            List.generate(2, (index){
-                                              return Text("- ${data['experience'][index]}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
-                                            }),
-                                          ),
+                                          // child: Column(
+                                          //   crossAxisAlignment: CrossAxisAlignment.start,
+                                          //   children:
+                                          //   List.generate(2, (index){
+                                          //     return Text("- ${data['experience'][index]}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),);
+                                          //   }),
+                                          // ),
+                                          child: Text("- ${data['experience']}", style: TextStyle(decoration: TextDecoration.none,fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.02, color: Colors.black, fontWeight: FontWeight.w300),),
                                         ),
                                       ]
                                   ),
@@ -237,11 +240,11 @@ class SPDetail extends StatelessWidget {
                                     height: MediaQuery.of(context).size.height*0.05,
                                     width: MediaQuery.of(context).size.width*0.1,
                                     decoration: BoxDecoration(
-                                      color: mainColor,
+                                      color: FirebaseAuth.instance.currentUser!.email! == data['email'] ? ChatRoom.secondaryColor : mainColor,
                                       borderRadius: BorderRadius.circular(17),
                                     ),
                                     child: InkWell(
-                                        onTap: (){
+                                        onTap: FirebaseAuth.instance.currentUser!.email! == data['email'] ? null : () {
                                           Navigator.push(context, MaterialPageRoute(builder: (context)=> Agreement(documentId: documentId, email: data["email"], projectName: data["projectname"], area: data["area"], name: data["name"])));
 
                                         },

@@ -47,7 +47,7 @@ class _SPEarningsState extends State<SPEarnings> {
                 height: MediaQuery.of(context).size.height*0.05,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height*1, // +600
+                height: MediaQuery.of(context).size.height, // +600
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Colors.white38,
@@ -61,8 +61,7 @@ class _SPEarningsState extends State<SPEarnings> {
                           itemBuilder: (context, index){
                             return Container(
                               width: MediaQuery.of(context).size.width*0.25,
-                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.2),
-                              //color: Colors.red,
+                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.175),
                               child: Column(
                                 children: [
                                   Container(

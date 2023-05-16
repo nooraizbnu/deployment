@@ -313,17 +313,18 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import 'package:procollab_web/about/about.dart';
 import 'package:procollab_web/allposts/posts.dart';
 import 'package:procollab_web/earnings/Earnings.dart';
 import 'package:procollab_web/progress/editpage.dart';
 import 'package:procollab_web/chat/chathome.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../contributorside/home.dart';
 import '../earnings/earningshome.dart';
 import '../profile/profilehome.dart';
 import '../progress/home.dart';
 import '../progress/progresshome.dart';
+import '../tasks/home.dart';
 import '../tasks/taskshome.dart';
 
 class headerpostsu extends StatefulWidget {
@@ -415,7 +416,7 @@ class _headerpostsuState extends State<headerpostsu> {
 
                       child: InkWell(
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> TaskHome(documentId: "ehw5L2rIulFQLIKMVq2p")));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> TicketsMain()));
                           setState(() {
 
                           });
@@ -471,7 +472,12 @@ class _headerpostsuState extends State<headerpostsu> {
 
                         child: InkWell(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileMain()));
+                            // Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileMain()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CSMain()));
                           },
                           child: Text(user!.email!,
                             style: TextStyle(color: Colors.white,fontFamily: fontFamily, fontSize: MediaQuery.of(context).size.height*0.020, fontWeight: FontWeight.bold),),
@@ -484,7 +490,12 @@ class _headerpostsuState extends State<headerpostsu> {
 
                       child: InkWell(
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileMain()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context)=> ProfileMain()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CSMain()));
                         },
                         child: const CircleAvatar(
                           backgroundImage: AssetImage("happy-bearded-young-man.jpg"),

@@ -192,23 +192,22 @@ class _securityState extends State<security> {
                                                           onChanged: (value){
                                                             _formKey.currentState!.validate();
                                                           },
-                                                          validator: (value) {
-                                                            if (value == null || value.isEmpty) {
-                                                              return 'Please enter a password';
+                                                          validator: (value){
+                                                            if(value!.isEmpty){
+                                                              return "Please enter password";
+                                                            }else{
+                                                              //call function to check password
+                                                              bool result = validatePassword(value);
+                                                              if(result){
+                                                                // create account event
+                                                                return null;
+                                                              }else{
+                                                                return " The following is missing in your password:\n "
+                                                                    "- A capital letter\n "
+                                                                    "- A digit\n "
+                                                                    "- A special character";
+                                                              }
                                                             }
-                                                            if (value.length < 8) {
-                                                              return 'Password must be at least 8 characters long';
-                                                            }
-                                                            if (!value.contains(new RegExp(r'[A-Z]'))) {
-                                                              return 'Password must contain at least one uppercase letter';
-                                                            }
-                                                            if (!value.contains(new RegExp(r'[a-z]'))) {
-                                                              return 'Password must contain at least one lowercase letter';
-                                                            }
-                                                            if (!value.contains(new RegExp(r'[0-9]'))) {
-                                                              return 'Password must contain at least one number';
-                                                            }
-                                                            return null;
                                                           },
                                                           decoration: const InputDecoration(border: OutlineInputBorder(),
                                                             icon: Icon(Icons.password_outlined, color: secondaryColor,),

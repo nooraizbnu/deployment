@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:procollab_web/allposts/posts.dart';
 import 'package:procollab_web/profile/offeredcollaborations.dart';
 import 'package:procollab_web/profile/payable.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:procollab_web/authentication/signup.dart';
+import 'package:procollab_web/tasks/createtasks.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'interestedcollab.dart';
+import 'interestedcollabdata.dart';
+import 'interestedcontributors.dart';
 
 class Tabs extends StatefulWidget {
   const Tabs({Key? key}) : super(key: key);
@@ -17,6 +22,11 @@ class _TabsState extends State<Tabs> {
   Widget build(BuildContext context) {
     const mainColor = Color(0xFF1C5D8B);
     const secondaryColor = Color(0xFF3F83B4);
+
+    final user = FirebaseAuth.instance.currentUser;
+    bool exists = false;
+    List<String> Collaborators = [];
+    CollectionReference posts = FirebaseFirestore.instance.collection("posts");
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -80,8 +90,24 @@ class _TabsState extends State<Tabs> {
           ),
           body: TabBarView(
             children: [
+              // FutureBuilder<DocumentSnapshot>(
+              //   future: posts.doc(documentId).get(),
+              //   builder: ((context, snapshot){
+              //     Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+              //     print(data);
+              //     var collaboratorsArray = data["CollaboratorsEmail"];
+              //     if(collaboratorsArray.contains(user!.email!)){
+              //       exists = true;
+              //       return Offered();
+              //     }else{
+              //       exists = false;
+              //       print("not allowed");
+              //       return Center(child: Container(margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height*0.25, 0, 0), child: Text("                 No Projects Yet!\nPlease Contribute in a Project first!", style: TextStyle(fontSize: 20, fontFamily: "DM Sans", color: Colors.redAccent, fontWeight: FontWeight.w400))));
+              //     }
+              //   }),
+              // ),
               Offered(),
-              SPInterested(),
+              interestedContributors(),
               PayableMain(),
               //FirstScreen(),
               //SecondScreen(),

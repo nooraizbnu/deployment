@@ -43,7 +43,7 @@ class _AgreementState extends State<Agreement> {
       home: SafeArea(
                 child: SingleChildScrollView(
                   child: FutureBuilder<DocumentSnapshot>(
-                    future: users.doc(FirebaseAuth.instance.currentUser!.uid!).get(),
+                    future: users.doc(FirebaseAuth.instance.currentUser!.uid).get(),
                     builder: ((context, snapshot){
                       if(snapshot.connectionState == ConnectionState.done){
                         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
@@ -51,8 +51,12 @@ class _AgreementState extends State<Agreement> {
                           color: Colors.white,
                           child: Row(
                             children: [
+
+
                               Column(
                                 children: [
+
+                                  // headerpostsu(),
                                   Row(
                                     children: [
                                       Container(
@@ -267,6 +271,21 @@ class _AgreementState extends State<Agreement> {
                                                                   );
 
                                                                 });
+                                                            Future<bool> checkIfDocExists(String docId) async {
+                                                              try {
+                                                                // Get reference to Firestore collection
+                                                                var collectionRef = FirebaseFirestore.instance.collection('contributorrequest');
+
+                                                                var doc = await collectionRef.doc(docId).get();
+                                                                return doc.exists;
+                                                              } catch (e) {
+                                                                throw e;
+                                                              }
+                                                            }
+                                                            /// Check If Document Exists
+                                                            bool docExists = await checkIfDocExists(documentId);
+                                                            print("Document exists in Firestore? " + docExists.toString());
+
                                                             final snapshot = await FirebaseFirestore.instance
                                                                 .collection('contributorrequest').get();
 
@@ -277,7 +296,16 @@ class _AgreementState extends State<Agreement> {
                                                                 email: email,
                                                                 projectName: projectName,
                                                               );
-                                                            }else{
+                                                            }
+                                                            else if(docExists == false){
+                                                              await FirebaseCrud.addContributor(
+                                                                projectId: documentId,
+                                                                contributorId: FirebaseAuth.instance.currentUser!.uid,
+                                                                email: email,
+                                                                projectName: projectName,
+                                                              );
+                                                            }
+                                                            else{
                                                               DocumentReference docRef = FirebaseFirestore.instance.collection("contributorrequest").doc(documentId);
                                                               //DocumentSnapshot doc = await docRef.get();
                                                               docRef.update({
@@ -310,10 +338,11 @@ class _AgreementState extends State<Agreement> {
                                     ],
                                   ),
 
-                                  //footer(),
+                                  // footer(),
 
                                 ],
-                              )
+                              ),
+
                             ],
                           ),
                         );

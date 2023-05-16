@@ -17,7 +17,6 @@ class SPCreateTasks extends StatefulWidget{
 
 class _SPCreateTasksState extends State<SPCreateTasks> {
   final _task_description = TextEditingController();
-
   final _task_name = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -64,38 +63,6 @@ class _SPCreateTasksState extends State<SPCreateTasks> {
       ),
     );
 
-
-    // final nameField = TextFormField(
-    //     controller: _task_name,
-    //     autofocus: false,
-    //     validator: (value) {
-    //       if (value == null || value.trim().isEmpty) {
-    //         return 'This field is required';
-    //       }
-    //     },
-    //     decoration: InputDecoration(
-    //         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-    //         hintText: "Task name",
-    //         border:
-    //         OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
-
-
-    // final descriptionField = TextFormField(
-    //     controller: _task_description,
-    //     autofocus: false,
-    //     validator: (value) {
-    //       if (value == null || value.trim().isEmpty) {
-    //         return 'This field is required';
-    //       }
-    //     },
-    //     decoration: InputDecoration(
-    //         contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-    //         hintText: "Task description",
-    //         border:
-    //         OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
-
     final descriptionField = TextFormField(
       controller: _task_description,
       autofocus: false,
@@ -114,8 +81,6 @@ class _SPCreateTasksState extends State<SPCreateTasks> {
                 width: 2.5,
                 color: TaskHome.secondaryColor,
               )
-
-            // borderRadius: BorderRadius.circular(32.0),
           ),
 
 
@@ -188,10 +153,10 @@ class _SPCreateTasksState extends State<SPCreateTasks> {
 
     var mainColor = const Color(0xFF5364B8);
     //var secondaryColor = const Color(0xFF7886CB);
-    CollectionReference users = FirebaseFirestore.instance.collection("posts");
+    CollectionReference tickets = FirebaseFirestore.instance.collection("tickets");
     return SafeArea(
         child: FutureBuilder<DocumentSnapshot>(
-            future: users.doc(widget.documentId).get(),
+            future: tickets.doc(widget.documentId).get(),
             builder: ((context, snapshot){
               print(widget.documentId);
               if (snapshot.connectionState == ConnectionState.done) {
@@ -257,10 +222,8 @@ class _SPCreateTasksState extends State<SPCreateTasks> {
                                       child: IconButton(
                                         icon: Icon(Icons.delete),
                                         onPressed: () async {
-                                            DocumentReference docRef = FirebaseFirestore.instance.collection("posts").doc(widget.documentId);
+                                            DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(widget.documentId);
                                             DocumentSnapshot doc = await docRef.get();
-                                            // List temp = doc["tasksname"];
-                                            // print("Temp: $temp");
                                             setState(() {
                                               docRef.update({
                                                 "tasksname": FieldValue.arrayRemove([data['tasksname'][index]]),
@@ -272,16 +235,6 @@ class _SPCreateTasksState extends State<SPCreateTasks> {
                                                 "tasksdescription": FieldValue.arrayRemove([data['tasksdescription'][index]]),
                                               });
                                             });
-                                            // if("${data['taskstatuses'][index]}" == "Pending"){
-                                            //   taskstatus[index] = "In Progress";
-                                            //   print("Status of Tasks: $taskstatus");
-                                            //   DocumentReference docRef = FirebaseFirestore.instance.collection("posts").doc(documentId);
-                                            //   //DocumentSnapshot doc = await docRef.get();
-                                            //   docRef.update({
-                                            //     "taskstatuses": taskstatus,
-                                            //   });
-                                            //
-                                            // }
                                         },
                                       ),
                                     ),

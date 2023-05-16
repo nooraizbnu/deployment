@@ -75,7 +75,6 @@ class _OPHomeState extends State<OPHome> {
                               child: Row(
                                 children: [
                                   Row(children: [
-                                    // Text("data"),
                                     OngoingProjects(documentId: docIDs[index]),
                                   ],),
                                 ],

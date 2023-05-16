@@ -9,44 +9,31 @@ import 'package:procollab_web/ProjectCRUD/ProjectCRUD/page/editpage.dart';
 import '../ProjectCRUD/ProjectCRUD/services/firebase_crud.dart';
 
 class GetOfferedData extends StatefulWidget {
-  //const GetOfferedData({Key? key}) : super(key: key);
   final String documentId;
+  final int postsLength;
 
-  GetOfferedData({required this.documentId});
-
+  GetOfferedData({required this.documentId, required this.postsLength});
 
   @override
-  State<GetOfferedData> createState() => _GetOfferedDataState(documentId: this.documentId);
+  State<GetOfferedData> createState() => _GetOfferedDataState(documentId: this.documentId, postsLength: this.postsLength);
 }
 class _GetOfferedDataState extends State<GetOfferedData> {
   final String documentId;
-  //
-  _GetOfferedDataState({required this.documentId});
+  final int postsLength;
 
-  var name;
-  var area;
+  _GetOfferedDataState({required this.documentId, required this.postsLength});
 
   @override
   Widget build(BuildContext context){
     final user = FirebaseAuth.instance.currentUser;
-    if(user!.email! == "arhamlatif54@gmail.com"){
-      name = "Arham Latif";
-      area = "Web Developer";
-    }
-    else if(user!.email! == "salihashahzad@gmail.com"){
-      name = "Saliha Shahzad";
-      area = "UI/UX Designer";
-    }
-    else if(user!.email! == "nooraizasghar@gmail.com"){
-      name = "Nooraiz Asghar";
-      area = "Front End Developer";
-    }
 
     final Stream<QuerySnapshot> collectionReference = FirebaseCrud.readPosts();
     const mainColor = Color(0xFF1C5D8B);
     const secondaryColor = Color(0xFF3F83B4);
+    var loading = true;
 
     CollectionReference users = FirebaseFirestore.instance.collection("posts");
+    print("Posts Length: $postsLength");
     return SafeArea(
       child: SingleChildScrollView(
         child: FutureBuilder<DocumentSnapshot>(
@@ -54,6 +41,7 @@ class _GetOfferedDataState extends State<GetOfferedData> {
             builder: ((context, snapshot){
               if (snapshot.connectionState == ConnectionState.done) {
                 Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                loading = false;
                 if("${data['email']}" == user?.email){
                   return Container(
                   child: Row(
@@ -61,7 +49,7 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                       Container(
                         margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height*0.02),
                         width: MediaQuery.of(context).size.width*0.65,
-                        height: MediaQuery.of(context).size.height*0.65,
+                        height: MediaQuery.of(context).size.height*0.64,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -72,10 +60,13 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                         child: Stack(
 
                           children: <Widget>[
-                            Positioned(
-                              top: MediaQuery.of(context).size.height*0.04,
-                              left: MediaQuery.of(context).size.height*0.40,
-                              child: Text("${data['projectname']}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.045, color: mainColor, fontWeight: FontWeight.w600),),
+                            Column(
+                              children: [
+                                Center(child: Padding(
+                                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.015),
+                                  child: Text("${data['projectname']}", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.045, color: mainColor, fontWeight: FontWeight.w600),),
+                                )),
+                              ],
                             ),
                             Positioned(
                               top: MediaQuery.of(context).size.height*0.13,
@@ -144,8 +135,6 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                                     builder: ((context, snapshot){
                                     if (snapshot.hasData) {
                                      Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                                     // return ListView(
-                                       // children: snapshot.data!.docs.map((e) {
                                          return ButtonBar(
                                             //alignment: MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
@@ -174,8 +163,8 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                                                             requirements: "${data["requirements"]}",
                                                             responsibilities: "${data["responsibilities"]}",
                                                             experience: "${data["experience"]}",
-                                                            name: name,
-                                                            area: area,
+                                                            name: "${data["name"]}",
+                                                            area: "${data["area"]}",
                                                             email: user!.email!,
                                                         ),
                                                       ),
@@ -187,10 +176,7 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                                               ),
 
                                             ],
-                                          //);
                                           );
-                                        //}).toList(),
-                                      //);
                                     }
 
                                     return Container();
@@ -206,8 +192,10 @@ class _GetOfferedDataState extends State<GetOfferedData> {
                 );
               }
               }
-              //return Text("Fetching Data from Database..");
-              return const Text("");
+              return loading ? Container(
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15,left: MediaQuery.of(context).size.width*0.325),
+                child: CircularProgressIndicator(),
+              ) : Container();
             })),
       ),
     );

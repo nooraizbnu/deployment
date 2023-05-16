@@ -41,7 +41,7 @@ class _PostProgressState extends State<PostProgress> {
                 height: MediaQuery.of(context).size.height*0.05,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height*1.875, // +600
+                height: MediaQuery.of(context).size.height, // +600
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: Colors.white38,
@@ -57,7 +57,8 @@ class _PostProgressState extends State<PostProgress> {
                               child: Row(
                                 children: [
                                   Row(children: [
-                                    AllPostsProgress(documentId: docIDs[index]),
+                                    // docIDs[index].contains(FirebaseAuth.instance.currentUser!.uid) ? AllPostsProgress(documentId: docIDs[index]) : Container(),
+                                    AllPostsProgress(documentId: docIDs[index])
                                   ],),
                                 ],
                               ),

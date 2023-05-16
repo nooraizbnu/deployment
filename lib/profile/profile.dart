@@ -33,9 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
     const mainColor = Color(0xFF1C5D8B);
     const secondaryColor = Color(0xFF3F83B4);
 
-    var documentId = "arhamlatif";
-    //var documentId = "nooraizashgar";
-    //  var documentId = "salihashahzad";
+    var userdocId = FirebaseAuth.instance.currentUser!.uid;
     CollectionReference users = FirebaseFirestore.instance.collection("users");
     return SafeArea(
       child: FutureBuilder<DocumentSnapshot>(
@@ -276,7 +274,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               borderRadius: BorderRadius.circular(17),
                                             ),
                                             child: FutureBuilder(
-                                              future: users.doc(documentId).get(),
+                                              future: users.doc(userdocId).get(),
                                               builder: ((context, snapshot){
                                                 if (snapshot.hasData) {
                                                   Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
@@ -305,7 +303,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                 MaterialPageRoute<dynamic>(
                                                                   builder: (BuildContext context) => EditProfilePage(
                                                                     profile: Profile(
-                                                                      uid: documentId,
+                                                                      uid: userdocId,
                                                                       name: "${data["name"]}",
                                                                       email: "${data["email"]}",
                                                                       field: "${data["field"]}",
@@ -338,7 +336,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                               //   Navigator
                                                               // });
                                                               var response =
-                                                              await FirebaseCrud.deleteProfile(docId: documentId);
+                                                              await FirebaseCrud.deleteProfile(docId: userdocId);
                                                               if (response.code != 200) {
                                                                 showDialog(
                                                                     context: context,
@@ -391,7 +389,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Center(
                         child: InkWell(
                             onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=> MyApp(documentId: documentId,)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> MyApp(data:data, documentId: userdocId,)));
                               setState(() {
 
                               });
@@ -405,7 +403,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   Container(
-                    height: 2300,
+                    height: MediaQuery.of(context).size.height*1,
                     width: MediaQuery.of(context).size.width*0.65,
                     child: const Tabs(),
 

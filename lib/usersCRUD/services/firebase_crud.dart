@@ -24,6 +24,10 @@ class FirebaseCrud {
     required String fieldofwork,
     required String description,
     required String linkedin,
+    required String name,
+    required String area,
+    required String from,
+
   }) async {
 
     Response response = Response();
@@ -44,6 +48,11 @@ class FirebaseCrud {
       "linkedin" : linkedin,
       "status" : "unavailable",
       "uid": FirebaseAuth.instance.currentUser!.uid,
+      "name": name,
+      "field": area,
+      "from": from,
+      "projectscompleted": 0,
+      "ongoingprojects": 0,
     };
 
     var result = await documentReferencer

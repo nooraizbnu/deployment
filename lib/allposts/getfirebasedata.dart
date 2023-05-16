@@ -30,6 +30,8 @@ class _GetDataState extends State<GetData> {
     }
   }
 
+  var loading = true;
+
   @override
   Widget build(BuildContext context){
 
@@ -42,6 +44,7 @@ class _GetDataState extends State<GetData> {
               builder: ((context, snapshot){
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                  loading = false;
                   if("${data['approval']}" != "Pending"){
                     return Container(
                       child: Row(
@@ -68,8 +71,6 @@ class _GetDataState extends State<GetData> {
                                     child: Container(
                                       child: Text("Uploaded By", style: TextStyle(decoration: TextDecoration.none, fontFamily: "DM Sans", fontSize: MediaQuery.of(context).size.height*0.0325, color: mainColor, fontWeight: FontWeight.bold),),
                                     )),
-
-
 
                                 Positioned(
                                   top: MediaQuery.of(context).size.height*0.10,
@@ -178,14 +179,6 @@ class _GetDataState extends State<GetData> {
                             child: Stack(
 
                               children: <Widget>[
-                                // Positioned(
-                                //     top: MediaQuery.of(context).size.height*0.1,
-                                //     left: MediaQuery.of(context).size.height*0.08,
-                                //     child: Container(
-                                //       height: MediaQuery.of(context).size.height*0.003,
-                                //       width: MediaQuery.of(context).size.width*0.57,
-                                //       color: mainColor,
-                                //     )),
                                 Positioned(
                                   top: MediaQuery.of(context).size.height*0.035,
                                   left: MediaQuery.of(context).size.height*0.35,
@@ -239,8 +232,10 @@ class _GetDataState extends State<GetData> {
                     );
                   }
                 }
-                //return Text("Fetching Data from Database..");
-                return Center(child: CircularProgressIndicator());
+                return loading ? Container(
+                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15,left: MediaQuery.of(context).size.width*0.5),
+                  child: CircularProgressIndicator(),
+                ) : Container();
               })),
         ),
        );

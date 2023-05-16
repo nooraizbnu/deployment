@@ -4,6 +4,7 @@ import '../../models/response.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = FirebaseFirestore.instance.collection("posts");
+final CollectionReference _CollectionTickets = FirebaseFirestore.instance.collection("tickets");
 final CollectionReference _CollectionProfile = FirebaseFirestore.instance.collection("users");
 
 class FirebaseCrud {
@@ -38,7 +39,6 @@ class FirebaseCrud {
   }
 
 
-
   static Future<Response> updateTasks({
     required String docId,
     required String tasksname,
@@ -47,7 +47,7 @@ class FirebaseCrud {
   }) async {
     Response response = Response();
     DocumentReference documentReferencer =
-        _Collection.doc(docId);
+        _CollectionTickets.doc(docId);
 
     Map<String, dynamic> data = <String, dynamic>{
       "tasksname": FieldValue.arrayUnion([tasksname]),

@@ -6,21 +6,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../headerfooter/footer.dart';
 import '../headerfooter/headerpostsignin.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SProgress2 extends StatefulWidget {
   final String documentId;
-  SProgress2({required this.documentId});
+  final Map<String, dynamic> ticketsData;
+  SProgress2({required this.documentId, required this.ticketsData});
 
   @override
-  State<SProgress2> createState() => _SProgress2State(documentId: documentId);
+  State<SProgress2> createState() => _SProgress2State(documentId: documentId, ticketsData: ticketsData);
 }
 
 class _SProgress2State extends State<SProgress2> {
   final String documentId;
-  _SProgress2State({required this.documentId});
+  final Map<String, dynamic> ticketsData;
+  _SProgress2State({required this.documentId, required this.ticketsData});
 
   @override
-// List <String>statuses = ["Completed", "In Progress", "Pending"];
   var concolor = Color(0xBBBBC100);
   var textcolor = Color(0xBBBBC100);
 
@@ -37,10 +39,10 @@ class _SProgress2State extends State<SProgress2> {
     var pendBack = Color(0xFFFF9292);
     var pendFront = Color(0xFFFF1919);
 
-    var activeFront;
-    var activeBack;
+    var taskscompleted = 0;
 
     CollectionReference users = FirebaseFirestore.instance.collection("posts");
+
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -49,14 +51,15 @@ class _SProgress2State extends State<SProgress2> {
                   builder: ((context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       Map<String, dynamic> data = snapshot.data!.data() as Map<String,dynamic>;
-                      var taskslen = data['tasksname'].length;
+                      var taskslen = ticketsData['tasksname'].length;
                       var collaboratorslen = data['Collaborators'].length;
-                      List taskstatus = data['taskstatuses'];
-                      var taskstatuses = data['taskstatuses'].length;
+                      List taskstatus = ticketsData['taskstatuses'];
+                      var taskstatuses = ticketsData['taskstatuses'].length;
                       var completedTasks = 0;
                       for(int i = 0; i< taskslen; i++){
-                        if(data['taskstatuses'][i]=="Completed"){
+                        if(ticketsData['taskstatuses'][i]=="Completed"){
                           completedTasks += 1;
+                          taskscompleted += 1;
                         }
                       }
                       var percent = completedTasks/taskslen;
@@ -142,7 +145,7 @@ class _SProgress2State extends State<SProgress2> {
                                                 .of(context)
                                                 .size
                                                 .height * 0.05, 0, 0),
-                                            child: Text("${data['projectname']}",
+                                            child: Text("${ticketsData['projectname']}",
                                               style: TextStyle(
                                                 decoration: TextDecoration.none,
                                                 fontFamily: "DM Sans",
@@ -184,7 +187,6 @@ class _SProgress2State extends State<SProgress2> {
                                     ],
                                   ),
 
-
                                   //ROW WITH THE NAMES OF COLLABORATORS
                                   Container(
                                     padding: const EdgeInsets.only(left: 225.0),
@@ -192,7 +194,6 @@ class _SProgress2State extends State<SProgress2> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children:
                                       List.generate(collaboratorslen, (index) {
-                                        var temp = "asdf |" + "asdf";
                                         return Container(
                                           margin: EdgeInsets.fromLTRB(MediaQuery
                                               .of(context)
@@ -206,17 +207,21 @@ class _SProgress2State extends State<SProgress2> {
                                                   .of(context)
                                                   .size
                                                   .width * 0.025, 0, 0, 0),
-                                              child: Text(
-                                                "| ${data['Collaborators'][index]} |",
-                                                style: TextStyle(
-                                                    decoration: TextDecoration.none,
-                                                    fontFamily: "DM Sans",
-                                                    fontSize: MediaQuery
-                                                        .of(context)
-                                                        .size
-                                                        .height * 0.025,
-                                                    color: mainColor,
-                                                    fontWeight: FontWeight.w400),)
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    "| ${data['Collaborators'][index]} |",
+                                                    style: TextStyle(
+                                                        decoration: TextDecoration.none,
+                                                        fontFamily: "DM Sans",
+                                                        fontSize: MediaQuery
+                                                            .of(context)
+                                                            .size
+                                                            .height * 0.025,
+                                                        color: mainColor,
+                                                        fontWeight: FontWeight.w400),),
+                                                ],
+                                              )
                                           ),
                                         );
                                       }
@@ -279,48 +284,6 @@ class _SProgress2State extends State<SProgress2> {
 
                                   SizedBox(height: 25,),
 
-                                  // Row(
-                                  //   children: [
-                                  //     // Container(
-                                  //     //   width: MediaQuery
-                                  //     //       .of(context)
-                                  //     //       .size
-                                  //     //       .width * 0.255,
-                                  //     //   margin: EdgeInsets.fromLTRB(MediaQuery
-                                  //     //       .of(context)
-                                  //     //       .size
-                                  //     //       .width * 0.0, MediaQuery
-                                  //     //       .of(context)
-                                  //     //       .size
-                                  //     //       .height * 0.01, 0, 0),
-                                  //     //   padding: const EdgeInsets.only(
-                                  //     //       left: 00.0, top: 0.0),
-                                  //     //   child: Column(
-                                  //     //     crossAxisAlignment: CrossAxisAlignment.start,
-                                  //     //     children:
-                                  //     //     List.generate(taskslen, (index) {
-                                  //     //       if("${data['taskstatuses'][index]}" == "Completed"){
-                                  //     //         completedcounter++;
-                                  //     //       }
-                                  //     //       //print("Counter: $completedcounter");
-                                  //     //       //percent = (completedcounter/taskslen);
-                                  //     //       //percentage = percent*100;
-                                  //     //       //print("Percent: $percent");
-                                  //     //       return Text("");
-                                  //     //     }
-                                  //     //     ),
-                                  //     //
-                                  //     //   ),
-                                  //     // ),
-                                  //
-                                  //     //percent = (completedcounter/taskslen) as int;
-                                  //
-                                  //
-                                  //     Column(
-                                  //         children: []
-                                  //     ),
-                                  //   ],
-                                  // ),
                                   Container(
                                     margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.15, 0, 0, 0),
                                     child: LinearPercentIndicator(
@@ -338,51 +301,6 @@ class _SProgress2State extends State<SProgress2> {
                                       progressColor: secondaryColor,
                                     ),
                                   ),
-
-                                  // Row(
-                                  //   children: [
-                                  //     Container(
-                                  //       height: MediaQuery
-                                  //           .of(context)
-                                  //           .size
-                                  //           .height * 0.3,
-                                  //       width: MediaQuery
-                                  //           .of(context)
-                                  //           .size
-                                  //           .width * 0.15,
-                                  //       decoration: BoxDecoration(
-                                  //         border: Border.all(
-                                  //             color: mainColor, width: 2.5),
-                                  //         borderRadius: new BorderRadius.circular(300),
-                                  //       ),
-                                  //       margin: EdgeInsets.fromLTRB(MediaQuery
-                                  //           .of(context)
-                                  //           .size
-                                  //           .width * 0.32, MediaQuery
-                                  //           .of(context)
-                                  //           .size
-                                  //           .height * 0.025, 0, 0),
-                                  //
-                                  //
-                                  //
-                                  //
-                                  // child: Center(
-                                  //   child: Text("33%", style: TextStyle(
-                                  //     decoration: TextDecoration.none,
-                                  //     fontFamily: "DM Sans",
-                                  //     fontSize: MediaQuery
-                                  //         .of(context)
-                                  //         .size
-                                  //         .height * 0.06,
-                                  //     color: mainColor,
-                                  //     fontWeight: FontWeight.w600,),),
-                                  // )
-                                  //
-                                  //     ),
-                                  //   ],
-                                  //
-                                  // ),
-
 
                                   SizedBox(height: 50,),
 
@@ -439,7 +357,7 @@ class _SProgress2State extends State<SProgress2> {
                                                         .width * 0.00, 0, 0, 0),
                                                     child: Padding(
                                                       padding: const EdgeInsets.only(bottom: 10.0),
-                                                      child: Text("${data['tasksname'][index]}: ${data['tasksdescription'][index]}",
+                                                      child: Text("${ticketsData['tasksname'][index]}: ${ticketsData['tasksdescription'][index]}",
                                                         style: TextStyle(
                                                             decoration: TextDecoration.none,
                                                             fontFamily: "DM Sans",
@@ -456,29 +374,50 @@ class _SProgress2State extends State<SProgress2> {
                                                   child: ElevatedButton(
                                                       onPressed: (){
                                                         setState(() {
-                                                          if("${data['taskstatuses'][index]}" == "Pending"){
+                                                          if("${ticketsData['taskstatuses'][index]}" == "Pending"){
                                                             taskstatus[index] = "In Progress";
                                                             print("Status of Tasks: $taskstatus");
-                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("posts").doc(documentId);
+                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(documentId+FirebaseAuth.instance.currentUser!.uid);
                                                             //DocumentSnapshot doc = await docRef.get();
                                                             docRef.update({
                                                               "taskstatuses": taskstatus,
                                                             });
 
                                                           }
-                                                          else if("${data['taskstatuses'][index]}" == "In Progress"){
+                                                          else if("${ticketsData['taskstatuses'][index]}" == "In Progress"){
                                                             taskstatus[index] = "Completed";
+                                                            // if("${ticketsData['taskstatuses'][index]}" == "Completed"){
+                                                            //   // for(int i = 0; i < taskslen; i++){
+                                                            //   //   if("${data['taskstatuses'][i]}" == "Completed"){
+                                                            //   //     taskscompleted += 1;
+                                                            //   //   }
+                                                            //   // }
+                                                            //   if(taskscompleted == taskslen){
+                                                            //     DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(documentId+FirebaseAuth.instance.currentUser!.uid);
+                                                            //     //DocumentSnapshot doc = await docRef.get();
+                                                            //     docRef.update({
+                                                            //       "ProjectStatus": "Completed",
+                                                            //     });
+                                                            //   }
+                                                            //   else{
+                                                            //     DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(documentId+FirebaseAuth.instance.currentUser!.uid);
+                                                            //     //DocumentSnapshot doc = await docRef.get();
+                                                            //     docRef.update({
+                                                            //       "ProjectStatus": "In Progress",
+                                                            //     });
+                                                            //   }
+                                                            // }
                                                             print("Status of Tasks: $taskstatus");
-                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("posts").doc(documentId);
+                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(documentId+FirebaseAuth.instance.currentUser!.uid);
                                                             //DocumentSnapshot doc = await docRef.get();
                                                             docRef.update({
                                                               "taskstatuses": taskstatus,
                                                             });
                                                           }
-                                                          else if("${data['taskstatuses'][index]}" == "Completed"){
+                                                          else if("${ticketsData['taskstatuses'][index]}" == "Completed"){
                                                             taskstatus[index] = "Pending";
                                                             print("Status of Tasks: $taskstatus");
-                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("posts").doc(documentId);
+                                                            DocumentReference docRef = FirebaseFirestore.instance.collection("tickets").doc(documentId+FirebaseAuth.instance.currentUser!.uid);
                                                             //DocumentSnapshot doc = await docRef.get();
                                                             docRef.update({
                                                               "taskstatuses": taskstatus,
@@ -520,7 +459,10 @@ class _SProgress2State extends State<SProgress2> {
                         ),
                       );
                     }
-                    return CircularProgressIndicator();
+                    return Container(
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15,left: MediaQuery.of(context).size.width*0.5),
+                      child: CircularProgressIndicator(),
+                    );
                   })),
             ),
             ),

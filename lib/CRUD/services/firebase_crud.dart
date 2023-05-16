@@ -1,12 +1,78 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/src/widgets/editable_text.dart';
 import '../models/response.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = _firestore.collection('Mid2Practice');
 final CollectionReference _contributorCollection = FirebaseFirestore.instance.collection("contributorrequest");
+final CollectionReference _ticketsCollection = FirebaseFirestore.instance.collection("tickets");
 
 class FirebaseCrud {
+
+  static Future<Response> addTasksPerContributor({
+    required String documentId,
+    required String userId,
+    required String projectName,
+    required String userEmail,
+  }) async {
+
+    Response response = Response();
+    DocumentReference documentReferencer =
+    _ticketsCollection.doc(documentId+userId);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "CollaboratorsEmail": List.generate(0, (r) => userEmail),
+      "tasksname": List.generate(0, (r) => ""),
+      "taskstatuses": List.generate(0, (r) => ""),
+      "tasksdescription": List.generate(0, (r) => ""),
+      "projectname": projectName,
+    };
+
+    var result = await documentReferencer
+        .set(data)
+        .whenComplete(() {
+      response.code = 200;
+      response.message = "Request made successfully";
+    })
+        .catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
+  }
+
+  static Future<Response> addContributor({
+    required String projectId,
+    required String contributorId,
+    required String projectName,
+    required String email,
+  }) async {
+
+    Response response = Response();
+    DocumentReference documentReferencer =
+    _contributorCollection.doc(projectId);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "contributors": FieldValue.arrayUnion([contributorId]),
+      "email": email,
+      "projectName": projectName,
+    };
+
+    var result = await documentReferencer
+        .set(data)
+        .whenComplete(() {
+      response.code = 200;
+      response.message = "Request made successfully";
+    })
+        .catchError((e) {
+      response.code = 500;
+      response.message = e;
+    });
+
+    return response;
+  }
 
   static Future<Response> addEmployee({
     required String name,
@@ -106,37 +172,45 @@ class FirebaseCrud {
     return response;
   }
 
-  static Future<Response> addContributor({
-    required String projectId,
-    required String contributorId,
-    required String projectName,
-    required String email,
-  }) async {
-
-    Response response = Response();
-    DocumentReference documentReferencer =
-    _contributorCollection.doc(projectId);
-
-    Map<String, dynamic> data = <String, dynamic>{
-      "contributors": FieldValue.arrayUnion([contributorId]),
-      "email": email,
-      "projectName": projectName,
-    };
-
-
-      var result = await documentReferencer
-        .set(data)
-        .whenComplete(() {
-      response.code = 200;
-      response.message = "Request made successfully";
-    })
-        .catchError((e) {
-      response.code = 500;
-      response.message = e;
-    });
-
-    return response;
-  }
+  // static Future<Response> addContributor({
+  //   required String projectId,
+  //   required String contributorId,
+  //   required String projectName,
+  //   required String email,
+  // }) async {
+  //
+  //   Response response = Response();
+  //   DocumentReference documentReferencer =
+  //   _contributorCollection.doc(projectId);
+  //
+  //   //DocumentReference docRef = FirebaseFirestore.instance.collection("contributorrequest").doc(documentId);
+  //   //DocumentSnapshot doc = await docRef.get();
+  //   // documentReferencer.update({
+  //   //   "contributors": FieldValue.arrayUnion([FirebaseAuth.instance.currentUser!.uid]),
+  //   //   "email": email,
+  //   //   "projectName": projectName,
+  //   // });
+  //
+  //   Map<String, dynamic> data = <String, dynamic>{
+  //     "contributors": FieldValue.arrayUnion([contributorId]),
+  //     "email": email,
+  //     "projectName": projectName,
+  //   };
+  //
+  //
+  //     var result = await documentReferencer
+  //       .set(data)
+  //       .whenComplete(() {
+  //     response.code = 200;
+  //     response.message = "Request made successfully";
+  //   })
+  //       .catchError((e) {
+  //     response.code = 500;
+  //     response.message = e;
+  //   });
+  //
+  //   return response;
+  // }
 
   static Future<Response> updateCollaborators({
     required String name,

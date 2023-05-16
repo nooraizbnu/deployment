@@ -23,7 +23,7 @@ class _ContributorTabsState extends State<ContributorTabs> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white30,
@@ -63,20 +63,20 @@ class _ContributorTabsState extends State<ContributorTabs> {
                     ),
                   ),
                 ),
-                Tab(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: mainColor, width: 1)),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: Text("EARNINGS", style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: MediaQuery.of(context).size.height*0.025,
-                      ),),
-                    ),
-                  ),
-                ),
+                // Tab(
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(12),
+                //         border: Border.all(color: mainColor, width: 1)),
+                //     child: Align(
+                //       alignment: Alignment.center,
+                //       child: Text("EARNINGS", style: TextStyle(
+                //         fontWeight: FontWeight.w500,
+                //         fontSize: MediaQuery.of(context).size.height*0.025,
+                //       ),),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -84,7 +84,7 @@ class _ContributorTabsState extends State<ContributorTabs> {
             children: [
               SizedBox(child: OPHome()),
               SizedBox(child: Home()),
-              SizedBox(child: SPPEarnings()),
+              //SizedBox(child: SPPEarnings()),
             ],
           ),
         ),

@@ -7,6 +7,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:procollab_web/allposts/posts.dart';
 import '../headerfooter/footer.dart';
 import '../headerfooter/headerpostsignin.dart';
+import "package:firebase_auth/firebase_auth.dart";
 
 class CompProjs extends StatefulWidget {
   final String documentId;
@@ -31,10 +32,10 @@ class _CompProjsState extends State<CompProjs> {
     List<String> colnames = [];
     print("Document: $documentId");
 
-    CollectionReference users = FirebaseFirestore.instance.collection("posts");
+    CollectionReference posts = FirebaseFirestore.instance.collection("posts");
     return SafeArea(
       child: FutureBuilder<DocumentSnapshot>(
-          future: users.doc(documentId).get(),
+          future: posts.doc(documentId).get(),
           builder: ((context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
@@ -48,7 +49,7 @@ class _CompProjsState extends State<CompProjs> {
               });
 
               if ("${data['ProjectStatus']}" == "Completed" &&
-                  colnames.contains(name)) {
+                  data['CollaboratorsEmail'].contains(FirebaseAuth.instance.currentUser!.email) || "${data['email']}" == FirebaseAuth.instance.currentUser!.email ) {
                 return SizedBox(
                   child: Container(
                     //margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.1, 0, 0, 0),

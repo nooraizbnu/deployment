@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/response.dart';
@@ -6,15 +8,13 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 final CollectionReference _Collection = _firestore.collection('posts');
 final CollectionReference _CollectionProfile = _firestore.collection('users');
 
-
 class FirebaseCrud {
 
   static Future<Response> addEmployee({
+    required String documentId,
     required String name,
     required String projectname,
     required String collaboratorsneeded,
-    //required String Collaborators,
-    //required String ProjectStatus,
     required String area,
     required String email,
     required String AmountDue,
@@ -37,7 +37,6 @@ class FirebaseCrud {
       "AmountDue": AmountDue,
       "AmountEarned": AmountEarned,
       "approval": approval,
-      //"Collaborators": Collaborators
       "collaboratorsneeded": collaboratorsneeded,
       "area": area,
       "email": email,
@@ -47,6 +46,15 @@ class FirebaseCrud {
       "projectname": projectname,
       "requirements": requirements,
       "responsibilities": responsibilities,
+      "ProjectStatus": "In Progress",
+      'Collaborators': List.generate(0, (r) => ""),
+      'CollaboratorsEmail': List.generate(0, (r) => ""),
+      'CollaboratorsField': List.generate(0, (r) => ""),
+      'paymentStatus': List.generate(0, (r) => "Pending"),
+      "ticketsuid": List.generate(0, (r) => ""),
+      // 'tasksdescription': List.generate(0, (r) => ""),
+      // 'tasksname': List.generate(0, (r) => ""),
+      // 'taskstatuses': List.generate(0, (r) => ""),
     };
 
     var result = await documentReferencer
@@ -62,7 +70,6 @@ class FirebaseCrud {
 
         return response;
   }
-
 
   static Future<Response> updatePost({
     required String name,

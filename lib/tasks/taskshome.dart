@@ -9,15 +9,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../headerfooter/footer.dart';
 import '../headerfooter/headerpostsignin.dart';
 
-class TaskHome extends StatelessWidget {
+class TaskHome extends StatefulWidget {
   final String documentId;
+  // Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+  final Map<String, dynamic> data;
 
-  TaskHome({required this.documentId});
+  TaskHome({required this.documentId, required this.data});
 
   static const mainColor = Color(0xFF5364B8);
   static const secondaryColor = Color(0xFF7886CB);
 
+  @override
+  State<TaskHome> createState() => _TaskHomeState(documentId: documentId, data: data);
+}
+
+class _TaskHomeState extends State<TaskHome> {
+  final String documentId;
+  final Map<String, dynamic> data;
+  _TaskHomeState({required this.documentId, required this.data});
+
   final user = FirebaseAuth.instance.currentUser;
+
   bool exists = false;
 
   List<String> Collaborators = [];
@@ -25,6 +37,8 @@ class TaskHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference posts = FirebaseFirestore.instance.collection("posts");
+
+    var collaboratorsArray = data["CollaboratorsEmail"];
 
     return MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -37,34 +51,19 @@ class TaskHome extends StatelessWidget {
 
                     headerpostsu(), //Header post SignUp
 
-                    Container(
-                      margin: EdgeInsets.only(top: 75),
-                      height: MediaQuery.of(context).size.height*0.15,
-                      width: MediaQuery.of(context).size.width*0.65,
-                      decoration: BoxDecoration(
-                        color: mainColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Center(child: Text("TASKS",style: TextStyle(fontWeight: FontWeight.w600, fontSize: MediaQuery.of(context).size.height*0.06, color: Colors.white),)),
-                    ),
-                    FutureBuilder<DocumentSnapshot>(
-                      future: posts.doc(documentId).get(),
-                      builder: ((context, snapshot){
-                        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                        print(data);
-                        var collaboratorsArray = data["CollaboratorsEmail"];
-                        if(collaboratorsArray.contains(user!.email!)){
-                          exists = true;
-                          return SPCreateTasks(documentId: documentId);
-                        }else{
-                          exists = false;
-                          print("not allowed");
-                          return Center(child: Container(margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height*0.25, 0, 0), child: Text("                 No Projects Yet!\nPlease Contribute in a Project first!", style: TextStyle(fontSize: 20, fontFamily: "DM Sans", color: Colors.redAccent, fontWeight: FontWeight.w400))));
-                        }
-                        return Container();
-
-                      }),
-                    ),
+                    // Container(
+                    //   margin: EdgeInsets.only(top: 75),
+                    //   height: MediaQuery.of(context).size.height*0.15,
+                    //   width: MediaQuery.of(context).size.width*0.65,
+                    //   decoration: BoxDecoration(
+                    //     color: TaskHome.mainColor,
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: Center(child: Text("TASKS",style: TextStyle(fontWeight: FontWeight.w600, fontSize: MediaQuery.of(context).size.height*0.06, color: Colors.white),)),
+                    // ),
+                    // collaboratorsArray.contains(user!.email!) ? SPCreateTasks(documentId: documentId) : Center(child: Container(margin: EdgeInsets.fromLTRB(0, MediaQuery.of(context).size.height*0.25, 0, 0), child: Text("                 No Projects Yet!\nPlease Contribute in a Project first!", style: TextStyle(fontSize: 20, fontFamily: "DM Sans", color: Colors.redAccent, fontWeight: FontWeight.w400)))),
+                    //
+                    SPCreateTasks(documentId: documentId),
 
                     footer(), // Footer
                   ],
@@ -74,7 +73,7 @@ class TaskHome extends StatelessWidget {
 
           );
         },
-        )
-    );
-  }
+            )
+        );
+    }
 }

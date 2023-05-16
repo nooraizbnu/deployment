@@ -10,10 +10,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddPage extends StatefulWidget {
   final String documentId;
+  final Map<String, dynamic> data;
 
-
-
-  AddPage({required this.documentId});
+  AddPage({required this.documentId, required this.data});
   static const mainColor = Color(0xFF1C5D8B);
   static const secondaryColor = Color(0xFF3F83B4);
 
@@ -21,14 +20,15 @@ class AddPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _AddPage(documentId: documentId);
+    return _AddPage(documentId: documentId, data: data);
   }
 }
 
 class _AddPage extends State<AddPage> {
   final String documentId;
+  final Map<String, dynamic> data;
 
-  _AddPage({required this.documentId});
+  _AddPage({required this.documentId,  required this.data});
 
   final user = FirebaseAuth.instance.currentUser;
 
@@ -59,28 +59,9 @@ class _AddPage extends State<AddPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  var name;
-  var area;
-
   @override
   Widget build(BuildContext context) {
-    if(user!.email! == "arhamlatif54@gmail.com"){
-      name = "Arham Latif";
-      area = "Web Developer";
-    }
-    else if(user!.email! == "salihashahzad@gmail.com"){
-      name = "Saliha Shahzad";
-      area = "UI/UX Designer";
-    }
-    else if(user!.email! == "nooraizasghar@gmail.com"){
-      name = "Nooraiz Asghar";
-      area = "Front End Developer";
-    }
-    else{
-      name = "User1";
-      area = "Flutter Developer";
-    }
-
+    print("userDocID: $documentId");
     final projectNameField = SizedBox(
       width: MediaQuery.of(context).size.width*0.25,
       child: TextFormField(
@@ -444,25 +425,27 @@ class _AddPage extends State<AddPage> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            var ongoingprojects = int.parse("${data["ongoingprojects"]}") + 1;
+            DocumentReference docRef = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
+            //DocumentSnapshot doc = await docRef.get();
+            docRef.update({
+              "ongoingprojects": ongoingprojects,
+            });
             var response = await FirebaseCrud.addEmployee(
-
-                name: name,
+                documentId: documentId,
+                name: "${data["name"]}",
                 projectname: _projectname.text,
                 collaboratorsneeded: _collaboratorsneeded.text,
-                area: area,
+                area: "${data["field"]}",
                 email: user!.email!,
                 AmountDue: _AmountDue.text,
                 paihay: _AmountDue.text,
                 AmountEarned: _AmountEarned.text,
                 approval: "Pending",
-                //experience: _experience.text,
-                //paihay: _paihay.text,
                 projectdescription: _projectdescription.text,
                 experience: _experience.text,
                 requirements: _requirements.text,
                 responsibilities: _responsibilites.text,
-                //requirements: _requirements.text,
-                //responsibilities: _responsibilites.text,
             );
             if (response.code != 200) {
               showDialog(

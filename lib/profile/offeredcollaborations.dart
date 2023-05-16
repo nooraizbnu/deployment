@@ -19,6 +19,7 @@ class _OfferedState extends State<Offered> {
   final user = FirebaseAuth.instance.currentUser;
 
   List<String> docIDs = [];
+  var postsLength = 0;
 
   Future getDocIds() async {
     await FirebaseFirestore.instance.collection("posts").get().then(
@@ -29,7 +30,6 @@ class _OfferedState extends State<Offered> {
     );
     print(docIDs);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +42,8 @@ class _OfferedState extends State<Offered> {
                 height: MediaQuery.of(context).size.height*0.15,
               ),
 
-              SizedBox(
-                height: 1940, // +600
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.white38,
-                  ),
+              Container(
+                height: MediaQuery.of(context).size.height*1.4,
                   child: FutureBuilder(
                     future: getDocIds(),
                     builder: (context, snapshot){
@@ -59,7 +55,7 @@ class _OfferedState extends State<Offered> {
                               child: Row(
                                 children: [
                                   Row(children: [
-                                    GetOfferedData(documentId: docIDs[index]),
+                                    GetOfferedData(documentId: docIDs[index], postsLength: docIDs.length),
                                   ],),
                                 ],
                               ),
@@ -70,15 +66,10 @@ class _OfferedState extends State<Offered> {
                     },
                   ),
                 ),
-
-              ),
             ],
-
-
           ),
         ),
       ),
     );
-    //);
   }
 }

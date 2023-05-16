@@ -4,26 +4,9 @@ import 'dart:js';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore_web/cloud_firestore_web.dart';
-import '../headerfooter/footer.dart';
-import '../headerfooter/headerpostsignin.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import 'editpage.dart';
-
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(
-//       options: const FirebaseOptions(
-//     apiKey: "AIzaSyBJ9HcdFos8Bx85m9Jj2X3BPt3U7MhRV50",
-//     projectId: "fir-authentication-ef41b",
-//     messagingSenderId: "712311594484",
-//     appId: "1:712311594484:web:15e0dcb3b32f4406c36da1",
-//     storageBucket: "fir-authentication-ef41b.appspot.com",
-//   ));
-//   runApp( AllPostsProgress());
-// }
 
 class AllPostsProgress extends StatefulWidget {
   final String documentId;
@@ -50,199 +33,258 @@ class _AllPostsProgressState extends State<AllPostsProgress> {
     var secondaryColor = Color(0xFF7886CB);
     print("Document: $documentId");
 
+    var loading = true;
+    var userexists = false;
+
+    CollectionReference tickets =
+        FirebaseFirestore.instance.collection("tickets");
     CollectionReference posts = FirebaseFirestore.instance.collection("posts");
 
     return SafeArea(
-          child: SingleChildScrollView(
-            child: FutureBuilder<DocumentSnapshot>(
-                future: posts.doc(documentId).get(),
-                builder: ((context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    Map<String, dynamic> data =
-                        snapshot.data!.data() as Map<String, dynamic>;
-                    var collaboratorsArray = data["CollaboratorsEmail"];
-                    if(collaboratorsArray.contains(user!.email!)){
-                      var taskslen = data['tasksname'].length;
-                      print("taskslen $taskslen");
-                      var collaboratorslen = data['Collaborators'].length;
-                      print("collaboratorslen $collaboratorslen");
-                      var taskstatuses = data['taskstatuses'].length;
-                      var completedTasks = 0;
-                      for(int i = 0; i< taskslen; i++){
-                        if(data['taskstatuses'][i]=="Completed"){
-                          completedTasks += 1;
-                        }
-                      }
-                      percent = completedTasks/taskslen;
-                      print(percent);
-                      print("Completed Tasks: $completedTasks");
-                      var percentText = (percent*100).toStringAsFixed(1);
-                      print("Text Percent $percentText");
+      child: SingleChildScrollView(
+        child: FutureBuilder<DocumentSnapshot>(
+            future: posts.doc(documentId).get(),
+            builder: ((context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                for(int i = 0; i < data["ticketsuid"].length; i++){
+                  if(data["ticketsuid"][i].contains(FirebaseAuth.instance.currentUser!.uid)){
+                    userexists = true;
+                  }
+                }
 
-                      return Container(
-                        child: Column(
-                          children: [
+                return userexists ? Container(
+                  child: FutureBuilder<DocumentSnapshot>(
+                      future: tickets
+                          .doc(documentId +
+                              FirebaseAuth.instance.currentUser!.uid)
+                          .get(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.done) {
+                          Map<String, dynamic> ticketsData =
+                              snapshot.data!.data()
+                                  as Map<String, dynamic>;
 
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.65,
-                              margin: EdgeInsets.fromLTRB(
-                                  MediaQuery.of(context).size.width * 0.175,
-                                  0,
-                                  0,
-                                  MediaQuery.of(context).size.height * 0.0175),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(7.5),
-                                  border: Border.all(
-                                    color: mainColor,
-                                    width: 2.5,
-                                  )),
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.all(
-                                        MediaQuery.of(context).size.height *
-                                            0.015),
-                                    child: Text(
-                                      data["projectname"],
-                                      style: TextStyle(
-                                          fontSize:
-                                              MediaQuery.of(context).size.height *
-                                                  0.02,
-                                          color: mainColor,
-                                          fontWeight: FontWeight.w600),
-                                    ),
+                          loading = false;
+
+                          //Calculating the progress percentage
+                          var taskslen =
+                              ticketsData['tasksname'].length;
+                          print("taskslen $taskslen");
+                          var completedTasks = 0;
+                          for (int i = 0; i < taskslen; i++) {
+                            if (ticketsData['taskstatuses'][i] ==
+                                "Completed") {
+                              completedTasks += 1;
+                            }
+                          }
+                          percent = completedTasks / taskslen;
+                          print(percent);
+                          print("Completed Tasks: $completedTasks");
+                          var percentText =
+                              (percent * 100).toStringAsFixed(1);
+                          print("Text Percent $percentText");
+
+                          return Container(
+                            width: MediaQuery.of(context).size.width *
+                                0.65,
+                            margin: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width *
+                                    0.175,
+                                0,
+                                0,
+                                MediaQuery.of(context).size.height *
+                                    0.0275),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(7.5),
+                                border: Border.all(
+                                  color: mainColor,
+                                  width: 2.5,
+                                )),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(
+                                      MediaQuery.of(context)
+                                              .size
+                                              .height *
+                                          0.015),
+                                  child: Text(
+                                    data["projectname"],
+                                    style: TextStyle(
+                                        fontSize:
+                                            MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.02,
+                                        color: mainColor,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        left: MediaQuery.of(context).size.width *
-                                            0.05),
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Text(
-                                              "Collaborators: ${data["Collaborators"].length}",
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                          0.05),
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            "Collaborators: ${data["Collaborators"].length}",
+                                            style: TextStyle(
+                                                fontSize: MediaQuery.of(
+                                                            context)
+                                                        .size
+                                                        .height *
+                                                    0.02,
+                                                color: mainColor,
+                                                fontWeight:
+                                                    FontWeight.w600),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: MediaQuery.of(
+                                                            context)
+                                                        .size
+                                                        .height *
+                                                    0.015),
+                                            child: Text(
+                                              "Your Tasks: ${ticketsData["tasksname"].length}",
                                               style: TextStyle(
-                                                  fontSize: MediaQuery.of(context)
+                                                  fontSize: MediaQuery.of(
+                                                              context)
                                                           .size
                                                           .height *
                                                       0.02,
                                                   color: mainColor,
-                                                  fontWeight: FontWeight.w600),
+                                                  fontWeight:
+                                                      FontWeight
+                                                          .w600),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: MediaQuery.of(context)
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            left:
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.05,
+                                            right:
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.05),
+                                        height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                            0.1,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(
+                                                    7.5),
+                                            border: Border.all(
+                                              color: mainColor,
+                                              width: 1,
+                                            )),
+                                      ),
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: MediaQuery.of(
+                                                            context)
+                                                        .size
+                                                        .height *
+                                                    0.015),
+                                            child: Text(
+                                              "Your Progress: ",
+                                              style: TextStyle(
+                                                  fontSize: MediaQuery.of(
+                                                              context)
                                                           .size
                                                           .height *
-                                                      0.015),
-                                              child: Text(
-                                                "Your Tasks: ${data["tasksname"].length}",
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.02,
-                                                    color: mainColor,
-                                                    fontWeight: FontWeight.w600),
-                                              ),
+                                                      0.02,
+                                                  color: mainColor,
+                                                  fontWeight:
+                                                      FontWeight
+                                                          .w600),
                                             ),
-                                          ],
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(
-                                              left: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                              right: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05),
-                                          height:
-                                              MediaQuery.of(context).size.height *
-                                                  0.1,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(7.5),
-                                              border: Border.all(
-                                                color: mainColor,
-                                                width: 1,
-                                              )),
-                                        ),
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.015),
-                                              child: Text(
-                                                "Your Progress: ",
-                                                style: TextStyle(
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.02,
-                                                    color: mainColor,
-                                                    fontWeight: FontWeight.w600),
-                                              ),
-                                            ),
-                                            LinearPercentIndicator(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                                  0.35,
-                                              animation: true,
-                                              lineHeight: 20.0,
-                                              animationDuration: 2500,
-                                              percent: percent,
-                                              center: Text("$percentText%"),
-                                              linearStrokeCap:
-                                              LinearStrokeCap.roundAll,
-                                              progressColor: secondaryColor,
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                          LinearPercentIndicator(
+                                            width:
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.35,
+                                            animation: true,
+                                            lineHeight: 20.0,
+                                            animationDuration: 2500,
+                                            percent: percent,
+                                            center:
+                                                Text("$percentText%"),
+                                            linearStrokeCap:
+                                                LinearStrokeCap
+                                                    .roundAll,
+                                            progressColor:
+                                                secondaryColor,
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.all(
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.02),
+                                            child: ElevatedButton(
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder:
+                                                              (context) =>
+                                                                  SProgress2(
+                                                                    ticketsData: ticketsData,
+                                                                    documentId: documentId,
+                                                                  )));
+                                                },
+                                                style: ElevatedButton
+                                                    .styleFrom(
+                                                  backgroundColor:
+                                                      mainColor, // Background color
+                                                ),
+                                                child: Text(
+                                                    "View Progress")),
+                                          )
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.all(
-                                        MediaQuery.of(context).size.height *
-                                            0.02),
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> SProgress2(documentId: documentId,)));
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: mainColor, // Background color
-                                        ),
-                                        child: Text("View Progress")),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
-
-                            // footer(),
-                          ],
-                        ),
-                      );
-                  }
-                  //return Text("Fetching Data from Database..");
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                )),
-          ),
-        );
+                          );
+                        }
+                        return Container();
+                      })),
+                ) : Container();
+                // }
+              }
+              return loading
+                  ? Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.15,
+                          left: MediaQuery.of(context).size.width * 0.5),
+                      child: CircularProgressIndicator(),
+                    )
+                  : Container();
+            })),
+      ),
+    );
   }
 }

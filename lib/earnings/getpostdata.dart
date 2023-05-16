@@ -6,7 +6,6 @@ import 'package:procollab_web/adminpanel/AdminPortal.dart';
 import '../CRUD/services/firebase_crud.dart';
 
 class getPostData extends StatefulWidget {
-  //const getPostData({Key? key}) : super(key: key);
   final String documentId;
 
   getPostData({required this.documentId});
@@ -24,6 +23,7 @@ class _getPostDataState extends State<getPostData> {
   Widget build(BuildContext context) {
     var collaboratorsLength;
     var mainColor = const Color(0xFF5364B8);
+    var loading = true;
     CollectionReference users = FirebaseFirestore.instance.collection("posts");
 
     return SafeArea(
@@ -34,9 +34,10 @@ class _getPostDataState extends State<getPostData> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
+                  loading = false;
                   collaboratorsLength = data['Collaborators'].length;
                   print("Length = $collaboratorsLength");
-                  if ("${data['approval']}" != "Pending") {
+                  if ("${data['approval']}" != "Pending" && data["CollaboratorsEmail"].contains(FirebaseAuth.instance.currentUser!.email)) {
                     return Column(
                       children: [
                         Center(
@@ -199,7 +200,10 @@ class _getPostDataState extends State<getPostData> {
                     );
                   }
                 }
-                return CircularProgressIndicator();
+                return loading ? Container(
+                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.15,left: MediaQuery.of(context).size.width*0.325),
+                  child: CircularProgressIndicator(),
+                ) : Container();
               }),
             ),
            ));
