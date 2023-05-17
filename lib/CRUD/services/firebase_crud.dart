@@ -20,6 +20,8 @@ class FirebaseCrud {
     Response response = Response();
     DocumentReference documentReferencer =
     _ticketsCollection.doc(documentId+userId);
+    print("interested collab crud");
+    print(documentId+userId);
 
     Map<String, dynamic> data = <String, dynamic>{
       "CollaboratorsEmail": List.generate(0, (r) => userEmail),

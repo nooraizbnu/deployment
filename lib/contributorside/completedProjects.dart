@@ -28,7 +28,6 @@ class _CompProjsState extends State<CompProjs> {
     var mainColor = Color(0xFF5364B8);
     var secondaryColor = Color(0xFF7886CB);
     var fontFam = "DM Sans";
-    var name = "Arham Latif";
     List<String> colnames = [];
     print("Document: $documentId");
 
@@ -40,16 +39,11 @@ class _CompProjsState extends State<CompProjs> {
             if (snapshot.connectionState == ConnectionState.done) {
               Map<String, dynamic> data =
                   snapshot.data!.data() as Map<String, dynamic>;
-              //var taskslen = 3;
+
               var collaboratorslen = data['Collaborators'].length;
 
-              List.generate(collaboratorslen, (index) {
-                colnames.add("${data['Collaborators'][index]}");
-                print("NAAM: ${colnames[index]}");
-              });
-
-              if ("${data['ProjectStatus']}" == "Completed" &&
-                  data['CollaboratorsEmail'].contains(FirebaseAuth.instance.currentUser!.email) || "${data['email']}" == FirebaseAuth.instance.currentUser!.email ) {
+              if (("${data['ProjectStatus']}" == "Completed") &&
+                  ((data['CollaboratorsEmail'].contains(FirebaseAuth.instance.currentUser!.email)) || ("${data['email']}" == FirebaseAuth.instance.currentUser!.email) )) {
                 return SizedBox(
                   child: Container(
                     //margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.1, 0, 0, 0),
@@ -78,17 +72,21 @@ class _CompProjsState extends State<CompProjs> {
                                             0.05,
                                         0,
                                         0),
-                                    child: Text(
-                                      "${data['projectname']}",
-                                      style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        fontFamily: "DM Sans",
-                                        fontSize:
-                                            MediaQuery.of(context).size.height *
-                                                0.05,
-                                        color: mainColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "${data['projectname']}",
+                                          style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            fontFamily: "DM Sans",
+                                            fontSize:
+                                                MediaQuery.of(context).size.height *
+                                                    0.05,
+                                            color: mainColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
                                     )),
                               ]),
 

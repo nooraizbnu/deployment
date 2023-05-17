@@ -51,18 +51,22 @@ class _AllPostsProgressState extends State<AllPostsProgress> {
                 for(int i = 0; i < data["ticketsuid"].length; i++){
                   if(data["ticketsuid"][i].contains(FirebaseAuth.instance.currentUser!.uid)){
                     userexists = true;
+                    print("ticketuid");
+                    print(data["ticketsuid"][i]);
                   }
                 }
 
                 return userexists ? Container(
                   child: FutureBuilder<DocumentSnapshot>(
                       future: tickets
-                          .doc(documentId +
-                              FirebaseAuth.instance.currentUser!.uid)
+                          .doc(documentId+FirebaseAuth.instance.currentUser!.uid)
                           .get(),
                       builder: ((context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.done) {
+                          print("object");
+                          print(documentId +
+                              FirebaseAuth.instance.currentUser!.uid);
                           Map<String, dynamic> ticketsData =
                               snapshot.data!.data()
                                   as Map<String, dynamic>;
